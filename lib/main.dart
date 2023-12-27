@@ -11,10 +11,17 @@ import 'package:todo_test_api/views/splash_screen.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => TodoProvider()),
-    ChangeNotifierProvider(create: (context) => AuthProvider()),
+    ChangeNotifierProvider(
+      create: (context) => TodoProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => AuthProvider(),
+    ),
   ], child: MyApp()));
 }
+
+// ChangeNotifierProvider(
+//   create: (context) => TodoProvider(),
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
@@ -24,28 +31,39 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Flutter Demo',
-      theme: ThemeData(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
       routerConfig: _router,
     );
   }
 
   final _router = GoRouter(routes: [
     GoRoute(
-        path: "/", name: "splash", builder: (context, state) => SplashScreen()),
+      path: "/home",
+      name: "home",
+      builder: (context, state) => MyHomePage(),
+    ),
     GoRoute(
-        path: "/home", name: "home", builder: (context, state) => MyHomePage()),
+      path: "/addNote",
+      name: "addNote",
+      builder: (context, state) => AddNote(),
+    ),
     GoRoute(
-      path: '/signup',
-      name: "signup",
+      path: "/signup",
+      name: 'signup',
       builder: (context, state) => SignupPage(),
     ),
     GoRoute(
-      path: '/signin',
-      builder: (context, state) => SigninPage(),
+      path: "/",
+      name: 'splash',
+      builder: (context, state) => SplashScreen(),
     ),
     GoRoute(
-        path: '/addNote',
-        name: "addNote",
-        builder: (context, state) => AddNote()),
+      path: "/signin",
+      name: "signin",
+      builder: (context, state) => SigninPage(),
+    ),
   ]);
 }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_test_api/models/user.dart';
 import 'package:todo_test_api/providers/auth_provider.dart';
 
+
 class SigninPage extends StatefulWidget {
   SigninPage({Key? key}) : super(key: key);
 
@@ -48,13 +49,14 @@ class _SigninPageState extends State<SigninPage> {
               onPressed: () {
                 context
                     .read<AuthProvider>()
-                    .signup(
-                        user: User(
-                            username: usernameController.text,
-                            password: passwordController.text))
-                    .then((value) {
-                  if (value.isNotEmpty) {
-                    context.pushNamed('signin');
+                    .signin(
+                      user: User(
+                          username: usernameController.text,
+                          password: passwordController.text),
+                    )
+                    .then((token) {
+                  if (token.isNotEmpty) {
+                    context.pushNamed('home');
                   }
                 });
               },

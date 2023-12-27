@@ -1,27 +1,33 @@
 import 'package:dio/dio.dart';
+import 'package:todo_test_api/models/token.dart';
 import 'package:todo_test_api/models/user.dart';
 import 'package:todo_test_api/services/client.dart';
 
-class AuthServices {
+
+class AuthService {
   Future<String> signup({required User user}) async {
-    late String token;
     try {
-      Response response = await Client.dio.post('/signup', data: user.toJson());
-      token = response.data["token"];
-    } catch (error) {
-      throw error.toString();
+      if (user.username.isNotEmpty && user.password.isNotEmpty) {
+        final Response response =
+            await ApiClient.dio.post("/signup", data: user.toJson());
+        print(response.data);
+        Token tokenModle = Token.fromJson(response.data);
+        return tokenModle.token.toString();
+      }
+      return "";
+    } catch (e) {
+      throw e.toString();
     }
-    return token;
   }
 
-  Future<String> signin({required User user}) async {
-    late String token;
+  Future signin({required User user}) async {
     try {
-      Response response = await Client.dio.post('/signin', data: user.toJson());
-      token = response.data["token"];
-    } catch (error) {
-      throw error.toString();
+      final Response response =
+          await ApiClient.dio.post("/signin", data: user.toJson());
+      Token tokenModel = Token.fromJson(response.data);
+      return tokenModel.token;
+    } catch (e) {
+      throw e.toString();
     }
-    return token;
   }
 }

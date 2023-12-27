@@ -5,32 +5,43 @@ class TodoService {
   final String serverUrl = "https://calm-plum-jaguar-tutu.cyclic.app/todos";
   final Dio _dio = Dio();
 
-  Future<List<Todo>> getTodoList() async {
+  Future<List<Todo>> getTodosListApi() async {
     try {
-      final response = await _dio.get(serverUrl);
-      TodoModel todoModel = TodoModel.fromJson(response.data);
-      return todoModel.data;
+      final responseValue = await _dio.get(serverUrl);
+      if (responseValue.statusCode == 200) {
+        final TodoModel todoModel = TodoModel.fromJson(responseValue.data);
+        return todoModel.data;
+      }
+      return [];
     } catch (e) {
       throw e.toString();
     }
   }
 
-  createTodo(String title, bool? value) async {
+  createTodoApi(String todoName, bool? isComplete) async {
     try {
-      final response = await _dio.post(serverUrl, data: {
-        "todoName": title,
-        "isComplete": value,
-      });
+      final Response response = await _dio.post(
+        serverUrl,
+        data: {
+          "todoName": todoName,
+          "isComplete": isComplete,
+        },
+      );
       return response.data;
     } catch (e) {
       throw e.toString();
     }
   }
 
-  updateTodo(String id, bool? value) async {
+  updateTodoApi(String id, bool? isComplete) async {
     try {
-      final response =
-          await _dio.put("$serverUrl/$id", data: {"isComplete": value});
+      final response = await _dio.put(
+        "$serverUrl/$id",
+        data: {
+          "isComplete": isComplete,
+        },
+      );
+
       return response.data;
     } catch (e) {
       throw e.toString();

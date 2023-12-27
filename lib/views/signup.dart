@@ -12,9 +12,9 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final usernameController = TextEditingController();
-
   final passwordController = TextEditingController();
+
+  final usernameController = TextEditingController();
 
   @override
   void dispose() {
@@ -47,15 +47,12 @@ class _SignupPageState extends State<SignupPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                context
-                    .read<AuthProvider>()
-                    .signup(
-                        user: User(
-                            username: usernameController.text,
-                            password: passwordController.text))
-                    .then((value) {
-                  if (value.isNotEmpty) {
-                    context.pushNamed('signup');
+                final User user = User(
+                    username: usernameController.text,
+                    password: passwordController.text);
+                context.read<AuthProvider>().signup(user: user).then((token) {
+                  if (token.isNotEmpty) {
+                    context.pushNamed("signin");
                   }
                 });
               },

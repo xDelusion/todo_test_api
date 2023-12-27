@@ -1,50 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:jwt_decode/jwt_decode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_test_api/models/user.dart';
 import 'package:todo_test_api/services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
+  final authService = AuthService();
   String token = "";
 
   Future<String> signup({required User user}) async {
-    token = await AuthServices().signup(user: user);
-    setToken(token);
+    token = await authService.signup(user: user);
+
+    /// token to be saved in local storage
     notifyListeners();
     return token;
   }
 
   Future<String> signin({required User user}) async {
-    token = await AuthServices().signin(user: user);
-    setToken(token);
+    token = await authService.signin(user: user);
+    saveTokenInStorage(token);
+
+    /// token to be saved in local storage
     notifyListeners();
     return token;
   }
 
-  Future<void> setToken(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('token', token);
+  // saveTokenInStorage
+  Future<void> saveTokenInStorage(String token) async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    shared.setString('token', token);
   }
 
-  Future<void> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token') ?? "";
+  //readTokenFromStorage
+
+  Future<String> readFromStorage() async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    token = shared.getString('token') ?? "";
+
+    /// ??  null check operator
     notifyListeners();
+    return token;
   }
 
-  Future<bool> isAuth() async {
-    getToken();
-    if (token.isNotEmpty && Jwt.getExpiryDate(token)!.isAfter(DateTime.now())) {
-      return true;
-    }
-    logout();
-    return false;
-  }
-
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('token');
+  Future<void> logOut() async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    shared.setString("token", '');
     token = "";
+    print(token);
+    saveTokenInStorage(token);
     notifyListeners();
   }
 }

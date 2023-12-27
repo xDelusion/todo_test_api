@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:todo_test_api/models/todo_model.dart';
 import 'package:todo_test_api/services/todo_service.dart';
 
+
 class TodoProvider extends ChangeNotifier {
   List<Todo> todosList = [];
-  final _todoService = TodoService();
 
-  Future<void> getTodos() async {
-    todosList = await _todoService.getTodoList();
+  final TodoService _todoService = TodoService();
+
+  Future<void> todoList() async {
+    todosList = await _todoService.getTodosListApi();
     notifyListeners();
   }
 
-  updateTodo(String id, bool? value) async {
-    await _todoService.updateTodo(id, value);
-    await getTodos();
+  Future<void> createNewNote(String todoName, bool? isComplete) async {
+    await _todoService.createTodoApi(todoName, isComplete);
+    await todoList();
   }
 
-  createNewNote(String title, bool? isComplete) async {
-    await _todoService.createTodo(title, isComplete);
-    await getTodos();
+  Future<void> updateNote(String id, bool? isComplete) async {
+    await _todoService.updateTodoApi(id, isComplete);
+    await todoList();
   }
 }
