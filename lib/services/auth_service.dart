@@ -3,13 +3,12 @@ import 'package:todo_test_api/models/token.dart';
 import 'package:todo_test_api/models/user.dart';
 import 'package:todo_test_api/services/client.dart';
 
-
 class AuthService {
   Future<String> signup({required User user}) async {
     try {
       if (user.username.isNotEmpty && user.password.isNotEmpty) {
         final Response response =
-            await ApiClient.dio.post("/signup", data: user.toJson());
+            await ApiClient.post("/signup", data: user.toJson());
         print(response.data);
         Token tokenModle = Token.fromJson(response.data);
         return tokenModle.token.toString();
@@ -23,7 +22,7 @@ class AuthService {
   Future signin({required User user}) async {
     try {
       final Response response =
-          await ApiClient.dio.post("/signin", data: user.toJson());
+          await ApiClient.post("/signin", data: user.toJson());
       Token tokenModel = Token.fromJson(response.data);
       return tokenModel.token;
     } catch (e) {

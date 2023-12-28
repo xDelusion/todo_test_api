@@ -1,13 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:todo_test_api/models/todo_model.dart';
+import 'package:todo_test_api/services/client.dart';
 
 class TodoService {
-  final String serverUrl = "https://calm-plum-jaguar-tutu.cyclic.app/todos";
-  final Dio _dio = Dio();
-
   Future<List<Todo>> getTodosListApi() async {
     try {
-      final responseValue = await _dio.get(serverUrl);
+      final responseValue = await ApiClient.get("/todos");
       if (responseValue.statusCode == 200) {
         final TodoModel todoModel = TodoModel.fromJson(responseValue.data);
         return todoModel.data;
@@ -20,8 +18,8 @@ class TodoService {
 
   createTodoApi(String todoName, bool? isComplete) async {
     try {
-      final Response response = await _dio.post(
-        serverUrl,
+      final Response response = await ApiClient.post(
+        "/todos",
         data: {
           "todoName": todoName,
           "isComplete": isComplete,
@@ -35,8 +33,8 @@ class TodoService {
 
   updateTodoApi(String id, bool? isComplete) async {
     try {
-      final response = await _dio.put(
-        "$serverUrl/$id",
+      final response = await ApiClient.put(
+        "todos/$id",
         data: {
           "isComplete": isComplete,
         },
