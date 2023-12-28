@@ -50,3 +50,12 @@ class ApiClient {
 class NamedRoutes {
   static final String login = "signin";
 }
+
+// import 'package:dio/dio.dart';
+
+// class Client {
+//   /* The use of static final ensures that there is only one instance of dio shared across
+//      all instances of the Client class, and it cannot be reassigned. */
+//   static final Dio dio = Dio(
+//       BaseOptions(baseUrl: 'https://coded-books-api-auth.eapi.joincoded.com'));
+// }
